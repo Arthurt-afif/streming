@@ -3,6 +3,7 @@ name: 24/7 Live Stream Engine
 on:
   repository_dispatch:
     types: [start_stream, start-stream]
+  workflow_dispatch: # Ini memungkinkan Anda klik "Run Workflow" manual di GitHub
 
 jobs:
   streaming:
@@ -13,7 +14,7 @@ jobs:
 
       - name: Execute Live Stream
         run: |
-          ffmpeg -re -stream_loop -1 -i "${{ github.event.client_payload.video_url }}" \
+          ffmpeg -re -stream_loop -1 -i "https://drive.google.com/uc?export=download&id=1OCj7bDx7jeWxinXXHoy477qtIApLQwr9" \
           -c:v libx264 -preset veryfast -b:v 3000k -maxrate 3000k -bufsize 6000k \
           -pix_fmt yuv420p -g 60 -c:a aac -b:a 128k -ar 44100 \
-          -f flv "rtmp://a.rtmp.youtube.com/live2/${{ github.event.client_payload.stream_key }}"
+          -f flv "rtmp://a.rtmp.youtube.com/live2/sdev-773b-p5ap-zgfv-1y1r"
