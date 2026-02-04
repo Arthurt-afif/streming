@@ -1,0 +1,19 @@
+name: 24/7 Live Stream Engine
+
+on:
+  repository_dispatch:
+    types: [start_stream]
+
+jobs:
+  streaming:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install FFmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Execute Live Stream
+        run: |
+          ffmpeg -re -stream_loop -1 -i "${{ github.event.client_payload.video_url }}" \
+          -c:v libx264 -preset veryfast -b:v 3000k -maxrate 3000k -bufsize 6000k \
+          -pix_fmt yuv420p -g 50 -c:a aac -b:a 128k -ar 44100 \
+          -f flv "${{ github.event.client_payload.rtmp_url }}${{ github.event.client_payload.stream_key }}"
