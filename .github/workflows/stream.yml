@@ -7,13 +7,15 @@ jobs:
   streaming:
     runs-on: ubuntu-latest
     steps:
-      - name: Install FFmpeg Quick
-        # Kita hanya install ffmpeg saja tanpa apt-get update yang lama
-        run: sudo apt-get install -y ffmpeg
+      - name: Install FFmpeg
+        # Menambahkan update untuk memperbaiki error 'Failed to fetch'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
 
       - name: Execute Live Stream
         run: |
-          # Mengambil data otomatis dari Lovable
+          # Perintah ini mengambil data otomatis dari Lovable
           ffmpeg -re -stream_loop -1 -i "${{ github.event.client_payload.video_url }}" \
           -c:v libx264 -preset ultrafast -tune zerolatency -b:v 2500k \
           -f flv "rtmp://a.rtmp.youtube.com/live2/${{ github.event.client_payload.stream_key }}"
