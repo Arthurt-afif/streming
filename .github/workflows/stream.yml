@@ -14,12 +14,13 @@ jobs:
 
       - name: Execute Live Stream
         run: |
-          echo "Memulai Stream Permanen..."
+          echo "Memulai Stream Permanen dengan Optimasi Koneksi..."
           
-          # Menggunakan link Dropbox dengan parameter dl=1 agar direct download
-          # Menggunakan Stream Key permanen yang Anda berikan
+          # 1. Menggunakan link Dropbox dengan dl=1 (Direct Download) untuk menghindari error 'Invalid Data'
+          # 2. Menggunakan preset ultrafast dan tune zerolatency untuk menjaga kestabilan di YouTube Studio
+          # 3. Bitrate diatur pada 2500k agar tidak terjadi buffering yang menyebabkan status 'Buruk'
           
           ffmpeg -re -stream_loop -1 -i "https://www.dropbox.com/scl/fi/yq4sb2fpjxl6x1f35jvf3/0205-1.mp4?rlkey=mfmskro550wev80jk21zbf8mz&st=qsd1ly8e&dl=1" \
-          -c:v libx264 -preset veryfast -b:v 3000k -maxrate 3000k -bufsize 6000k \
+          -c:v libx264 -preset ultrafast -tune zerolatency -b:v 2500k -maxrate 2500k -bufsize 5000k \
           -pix_fmt yuv420p -g 60 -c:a aac -b:a 128k -ar 44100 \
           -f flv "rtmp://a.rtmp.youtube.com/live2/vpcr-gq4t-mvj5-e8uf-7e7w"
